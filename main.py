@@ -28,6 +28,8 @@ for item in results:
     label = convert(item.text, ' — ')
     #                    remove newline characters
     book = label[0].replace('\n', '')
-    #                    remove double spaces
-    author = label[1].replace('  ', '')
+    # split 'author + pages' into list (use 6 spaces as split) 
+    secondHalf = convert(label[1], '      ')
+    #author is the first half of that list
+    author = secondHalf[0]
     print(f"Book Title: {book}\nAuthor Name: {author}\n")
