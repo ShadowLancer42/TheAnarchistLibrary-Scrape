@@ -24,10 +24,10 @@ f.close()
 results = soup.find(id="widepage").find(class_="list-group").find_all(class_="amw-listing-item")
 
 for item in results:
+    # splits the item into a list, ['Book Title', 'Author']
     label = convert(item.text, ' — ')
-    book = label[0]
-    author = label[1]
-    print(f"author: {author}\nbook: {book}\n")
-
-
-print(results[0].text)
+    #                    remove newline characters
+    book = label[0].replace('\n', '')
+    #                    remove double spaces
+    author = label[1].replace('  ', '')
+    print(f"Book Title: {book}\nAuthor Name: {author}\n")
