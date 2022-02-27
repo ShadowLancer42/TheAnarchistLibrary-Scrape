@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 
 #funcs
+#region
 
 #general purpose
 def convert(string, breaker):
@@ -23,7 +24,7 @@ def dictMaker(structure, label):
 
 # takes a list of results (use find_all()) and iterates through, and seperates
 # results into a list: [Book Title, Author name, (whatever else may be tagged on at the end)]
-def fetchResults(results, breaker):
+def fetchResults(results, breaker, structure):
     output = []
     for item in results:
         # splits the item into a list, ['Book Title', 'Author']
@@ -46,21 +47,25 @@ def fetchResults(results, breaker):
         print(f"Book Title: {book}\nAuthor Name: {author}\n")
         # add a nested dict of this specific label to the list, which we will output once
         # we have iterated through all labels.
-        output.append(dictMaker(thisLabel))
+        output.append(dictMaker(thisLabel, structure))
     return output
 
         
 
 def popTexts(soup):
     results = soup.find(id="widepage").find(class_="list-group").find_all(class_="amw-listing-item")
-    data = fetchResults(results, '      ')
-    return results
+    structure = ["Book Title", "Author Name", "Downloads"]
+    data = fetchResults(results, '      ', structure)
+    return data
 
 def topicPage(soup):
     results = soup.find(id="widepage").find(class_="amw-post-listing-container").div.div.find_all(class_="amw-listing-item")
-    #feed fetchResults your find_all() list of items, it will give you the 
-    output = fetchResults(results, '\n')
-    return output
+
+    structure = ["Book Title", "Author Name", "Date Published", "Pages"]
+    #feed fetchResults your find_all() list of items, it will give you the data on it
+    # in the form of a list containing several dicts (so a python version of a json)
+    data = fetchResults(results, '\n', structure)
+    return data
 
 #endregion
 
@@ -74,4 +79,4 @@ myPage = requests.get(myLink).content
 soup = BeautifulSoup(myPage, 'lxml')
 
 #
-topicPage(soup)
+print(topicPage(soup))
