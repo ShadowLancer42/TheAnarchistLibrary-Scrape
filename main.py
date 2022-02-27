@@ -21,15 +21,19 @@ f = open('myPage.html', 'w')
 f.write(soup.prettify())
 f.close()
 
-results = soup.find(id="widepage").find(class_="list-group").find_all(class_="amw-listing-item")
 
-for item in results:
-    # splits the item into a list, ['Book Title', 'Author']
-    label = convert(item.text, ' — ')
-    #                    remove newline characters
-    book = label[0].replace('\n', '')
-    # split 'author + pages' into list (use 6 spaces as split) 
-    secondHalf = convert(label[1], '      ')
-    #author is the first half of that list
-    author = secondHalf[0]
-    print(f"Book Title: {book}\nAuthor Name: {author}\n")
+def popTexts(soup):
+    results = soup.find(id="widepage").find(class_="list-group").find_all(class_="amw-listing-item")
+    print(results)
+
+    for item in results:
+        # splits the item into a list, ['Book Title', 'Author']
+        label = convert(item.text, ' — ')
+        #                    remove newline characters
+        book = label[0].replace('\n', '')
+        # split 'author + pages' into list (use 6 spaces as split) 
+        secondHalf = convert(label[1], '      ')
+        #author is the first half of that list
+        author = secondHalf[0]
+        print(f"Book Title: {book}\nAuthor Name: {author}\n")
+
