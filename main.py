@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import json
 
 #funcs
 #region
@@ -11,15 +12,16 @@ def convert(string, breaker):
 
 #makes a dict from the structure (the keys) and a label var (the values)
 # both should be lists. the label will have info like author name, book title, etc.
-def dictMaker(structure, label):
+def dictMaker(label, structure):
     output = {}
     for i in range(len(label)):
         try:
-            output.update({structure[0] : label[0]})
+            output.update({structure[i] : label[i]})
         # in case of the label having more data than the structure can account
         # for, just use "other" as the key
         except:
             output.update({"other" : label[i]})
+    return output
 
 
 # takes a list of results (use find_all()) and iterates through, and seperates
@@ -43,8 +45,6 @@ def fetchResults(results, breaker, structure):
         for i in secondHalf:
             if (i != ''):
                 thisLabel.append(i)
-        #debug - print statement is temporary
-        print(f"Book Title: {book}\nAuthor Name: {author}\n")
         # add a nested dict of this specific label to the list, which we will output once
         # we have iterated through all labels.
         output.append(dictMaker(thisLabel, structure))
@@ -80,3 +80,10 @@ soup = BeautifulSoup(myPage, 'lxml')
 
 #
 print(topicPage(soup))
+
+myData = json.dumps(topicPage(soup), indent=4)
+
+# save it on a json file
+f = open('myData.json', 'w')
+f.write(myData)
+f.close()
